@@ -1,6 +1,7 @@
 # Vector Database
 ## What is a Vector?
- It is a 1-dimensional array which contains multiple types of scalers with same data type.
+ - A vector is a structured list of numbers that represents various attributes or features of an object, word, or data point.
+ - These numbers can capture everything from spatial dimensions to complex features in data, making vectors essential for various calculations and machine learning models.
 ## What is a Vector Database?
 - A Vector Database store, manages and indexes high-dimensional vector data.
 - Data points are stored as arrays of numbers called **vectors,** which are clustered based on similarity.
