@@ -1,3 +1,4 @@
 .vscode
-opensearch_poc
+.venv
+.vs
 src/config/__pycache__
