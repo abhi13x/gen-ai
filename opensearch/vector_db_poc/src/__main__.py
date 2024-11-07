@@ -16,7 +16,7 @@ def __main__():
         print('port:', port)
         
         # Initialize the client with the retrieved host and port
-        client = client(host, port)
+        clientConn = client(host, port)
         
     except KeyError as e:
         # Handle missing environment variables specifically
