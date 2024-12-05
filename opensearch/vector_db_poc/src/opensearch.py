@@ -1,12 +1,20 @@
-from opensearchpy import OpenSearch
-from opensearchpy.exceptions import ConnectionError, AuthenticationException
+from opensearchpy import AuthenticationException, OpenSearch
 
-# Function to create and return an OpenSearch client
-def client(host: str, port: int):
+class OpenSearchVectorDb:
+  host: str
+  port: int
+  def __init__(self, host: str, port: int):
+     self.host = host
+     self.port = port
+  # Function to create and return an OpenSearch client
+  def client(self):
     try:
         # Create the OpenSearch client with specified SSL/TLS settings
+        CLUSTER_URL: str = f"https://{self.host}:{self.port}"
+        print(f"Cluster URL: {CLUSTER_URL}")
         client = OpenSearch(
-            hosts=[{'host': host, 'port': port}],
+            hosts=[CLUSTER_URL],
+            http_auth=("admin", "admin"),
             http_compress=True,  # enables gzip compression for request bodies
             use_ssl=False,
             verify_certs=False,
@@ -18,7 +26,7 @@ def client(host: str, port: int):
 
     except ConnectionError as conn_err:
         # Handle connection-related issues, such as unreachable host or port issues
-        print(f"ConnectionError: Unable to connect to OpenSearch at {host}:{port} - {conn_err}")
+        print(f"ConnectionError: Unable to connect to OpenSearch at {self.host}:{self.port} - {conn_err}")
         raise
 
     except AuthenticationException as auth_err:
@@ -30,3 +38,8 @@ def client(host: str, port: int):
         # Catch any other unexpected errors and log them
         print(f"An error occurred while connecting to the OpenSearch client: {e}")
         raise
+
+  def create_index(self, client, index_name, index_body):
+    return client.indices.create(index=index_name, body=index_body)
+  
+  

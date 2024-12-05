@@ -1,7 +1,56 @@
-run:
-	python .\src\__main__.py
-setup: requirements.txt
-	pip install -r requirements.txt
+# Determine the platform and set the activation and clean command for each
+UNAME_S := $(shell uname -s)
+PYTHON_VERSION ?= 3.12  # Default Python version if not specified
+
+ifeq ($(UNAME_S),Linux)
+	PYTHON := python$(PYTHON_VERSION)
+	ACTIVATE := . .venv/bin/activate
+	CLEAN_CMD := rm -rf .venv
+else
+	PYTHON := py -$(PYTHON_VERSION) # Use `py -3.12` for Windows
+	ACTIVATE := . .\.venv\Scripts\Activate.ps1
+	CLEAN_CMD := if exist .venv rmdir /S /Q .venv
+endif
+
+# Get Python version
+PYTHON_INSTALLED_VERSION := $(shell $(PYTHON) --version 2>&1)
+
+# Target: create the virtual environment with the specified Python version
+venv: 
+	@echo "Creating virtual environment in .venv using $(PYTHON_INSTALLED_VERSION)..."
+	$(PYTHON) -m venv .venv
+	@echo "Virtual environment created."
+
+# Target: install dependencies and freeze
+install: venv
+	@echo "Installing dependencies from requirements.txt using $(PYTHON_INSTALLED_VERSION)..."
+	$(ACTIVATE); pip install -r requirements.txt
+	@echo "Dependencies installed. Updating requirements.txt..."
+	$(ACTIVATE); pip freeze > requirements.txt
+	@echo "requirements.txt updated."
+
+# Target: run the main Python script
+run: venv
+	@echo "Running src/__main__.py using $(PYTHON_INSTALLED_VERSION)..."
+	$(ACTIVATE); $(PYTHON) ./src/__main__.py
+
+# Target: freeze dependencies to requirements.txt
+freeze: venv
+	@echo "Freezing dependencies to requirements.txt using $(PYTHON_INSTALLED_VERSION)..."
+	$(ACTIVATE); pip freeze > requirements.txt
+	@echo "requirements.txt updated."
+
+# Target: clean up environment
 clean:
-	Remove-Item __pycache__
-	Remove-Item .venv
+	@echo "Removing virtual environment..."
+	$(CLEAN_CMD)
+	@echo "Environment cleaned."
+
+# Target: activate environment
+activate: venv
+	@echo "To activate the environment, run:"
+ifeq ($(UNAME_S),Linux)
+	@echo "source .venv/bin/activate"
+else
+	@echo ".venv\\Scripts\\Activate"
+endif

@@ -1,4 +1,4 @@
 .vscode
 .venv
 .vs
-src/config/__pycache__
+src/__pycache__
