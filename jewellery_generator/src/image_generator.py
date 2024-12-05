@@ -1,7 +1,6 @@
 from sentence_transformers import SentenceTransformer
 from diffusers import StableDiffusionPipeline
 import torch
-from pydantic import BaseModel
 
 class GenerateImage:
     input_text: str
@@ -12,9 +11,9 @@ class GenerateImage:
     def embedding_text_prompt(self):
         # Load the sentence transformer model for text embedding
         sentence_model = SentenceTransformer("sentence-transformers/sentence-t5-large")  # Example model
-        text_prompt = self.input_text
+        # text_prompt = self.input_text
         # Generate text embeddings (if the text-to-image pipeline accepts embeddings)
-        text_embedding = sentence_model.encode(text_prompt)
+        text_embedding = sentence_model.encode(self.input_text)
         return text_embedding
 
     def generate_image(self):
@@ -32,7 +31,7 @@ class GenerateImage:
         pipe = pipe.to(device)
 
         # Generate an image from the text prompt
-        image = pipe(prompt=self.text_prompt).images[0]
+        image = pipe(prompt=self.input_text).images[0]
 
         # Save or display the generated image
         image_name = (self.input_text[0:10]).replace(" ","_")+'.png'
