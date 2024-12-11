@@ -1,5 +1,6 @@
 from sentence_transformers import SentenceTransformer
 from diffusers import StableDiffusionPipeline, FluxPipeline
+import random
 import torch
 
 class GenerateImage:
@@ -38,8 +39,10 @@ class GenerateImage:
             # Generate an image from the text prompt
             image = pipe(prompt=self.input_text).images[0]
             # Save or display the generated image
-            image_name = (self.input_text[0:10]).replace(" ","_")+'.png'
+            rand = random.randint(0, 900)
+            image_name = 'temp_'+f'{rand}'+'.png'
             image.save(image_name)
             image.show()
+            return image_name
         except Exception as err:
             return err
