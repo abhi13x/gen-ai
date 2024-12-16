@@ -38,7 +38,7 @@ class Generate3DModel:
         print("Mesh saved at:", mesh_path)
         
         # Generate a video
-        print("Generate a video")
-        output_planes, video_path = model(image, source_camera, export_video=True)
-        print("Planes shape:", output_planes.shape)
-        print("Video saved at:", video_path)
+        # print("Generate a video")
+        # output_planes, video_path = model(image, source_camera, export_video=True)
+        # print("Planes shape:", output_planes.shape)
+        # print("Video saved at:", video_path)
