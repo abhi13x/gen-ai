@@ -1,15 +1,13 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, field_validator
 from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
-from typing import List, Dict, Optional
 from datetime import datetime
-import os, re, json, logging
-from logger import logger
+import os
+from backend.logger import logger
 from validator.chat_message import ChatMessage
 from validator.response_filter import ResponseFilter
-from create_prompt import PromptEngineering
+from backend.create_prompt import PromptEngineering
 
 # Initialize Logger
 logger = logger(__name__)
@@ -19,6 +17,7 @@ load_dotenv('.env')
 
 # Initialize FastAPI app
 app = FastAPI()
+router = APIRouter()
 
 # Add CORS middleware with restricted origins
 app.add_middleware(
@@ -77,9 +76,8 @@ async def chat_endpoint(chat_message: ChatMessage):
         logger.error(f"Internal error: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail="An internal error occurred. Please try again later."
+            detail=f"An internal error occurred. Please try again later., {str(e)}"
         )
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+   app.include_router(router)

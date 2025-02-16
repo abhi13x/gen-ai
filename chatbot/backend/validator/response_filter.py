@@ -10,6 +10,6 @@ class ResponseFilter:
 
         # Check for restricted patterns
         for pattern in SecurityConfig.RESTRICTED_PATTERNS:
-            if re.search(pattern):
+            if re.search(pattern, response):
                 response = re.sub(pattern, "[FILTERED]", response)
         return response
