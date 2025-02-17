@@ -4,10 +4,10 @@ from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 from datetime import datetime
 import os
-from backend.logger import logger
+from logger import logger
 from validator.chat_message import ChatMessage
 from validator.response_filter import ResponseFilter
-from backend.create_prompt import PromptEngineering
+from create_prompt import PromptEngineering
 
 # Initialize Logger
 logger = logger(__name__)
